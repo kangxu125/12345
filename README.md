@@ -1,33 +1,19 @@
 
-```java
-StringBuffer sb = new StringBuffer(); 
-// 超过120个字符的情况下，换行缩进4个空格，点号和方法名称一起换行 
-sb.append("zi").append("xin")...   
-.append("huang")... 
-.append("huang")... 
-.append("huang"); 
-```
-反例：
-```java
-StringBuffer sb = new StringBuffer(); 
-// 超过120个字符的情况下，不要在括号前换行 
-sb.append("zi").append("xin")...append     
-("huang");  
 
-// 参数很多的方法调用可能超过120个字符，不要在逗号前换行
- method(args1, args2, args3, ...     
-, argsX); 
-```
 8.【强制】方法参数在定义和传入时，多个参数逗号后边必须加空格。
 正例：下例中实参的"a",后边必须要有一个空格。
+```java
 method("a", "b", "c"); 
+```
 9.【强制】IDE的text file encoding设置为UTF-8; IDE中文件的换行符使用Unix格式，不要使用Windows格式。
 10.【推荐】没有必要增加若干空格来使某一行的字符与上一行对应位置的字符对齐。
 正例：
+```java
 int a = 3; 
 long b = 4L; 
 float c = 5F; 
 StringBuffer sb = new StringBuffer(); 
+```
 说明：增加sb这个变量，如果需要对齐，则给a、b、c都要增加几个空格，在变量比较多的情况下，是非常累赘的事情。
 11.【推荐】不同逻辑、不同语义、不同业务的代码之间插入一个空行分隔开来以提升可读性。
 说明：没有必要插入多个空行进行隔开。
@@ -37,14 +23,26 @@ StringBuffer sb = new StringBuffer();
 说明：getObject()与get0bject()的问题。一个是字母的O，一个是数字的0，加@Override可以准确判断是否覆盖成功。另外，如果在抽象类中对方法签名进行修改，其实现类会马上编译报错。
 3.【强制】相同参数类型，相同业务含义，才可以使用Java的可变参数，避免使用Object。
 说明：可变参数必须放置在参数列表的最后。（提倡同学们尽量不用可变参数编程）
-正例：public User getUsers(String type, Integer... ids) {...}
+正例：
+```java
+public User getUsers(String type, Integer... ids) {...}
+```
 4.【强制】外部正在调用或者二方库依赖的接口，不允许修改方法签名，避免对接口调用方产生影响。接口过时必须加@Deprecated注解，并清晰地说明采用的新接口或者新服务是什么。
 5.【强制】不能使用过时的类或方法。
 说明：java.net.URLDecoder 中的方法decode(String encodeStr) 这个方法已经过时，应该使用双参数decode(String source, String encode)。接口提供方既然明确是过时接口，那么有义务同时提供新的接口；作为调用方来说，有义务去考证过时方法的新实现是什么。
 6.【强制】Object的equals方法容易抛空指针异常，应使用常量或确定有值的对象来调用equals。
-正例："test".equals(object);
-反例：object.equals("test");
-说明：推荐使用java.util.Objects#equals（JDK7引入的工具类）
+正例：
+```java
+"test".equals(object);
+```
+反例：
+```java
+object.equals("test");
+```
+说明：推荐使用
+```java
+java.util.Objects#equals（JDK7引入的工具类）
+```
 7.【强制】所有的相同类型的包装类对象之间值的比较，全部使用equals方法比较。
 说明：对于Integer var = ?  在-128至127范围内的赋值，Integer对象是在IntegerCache.cache产生，会复用已有对象，这个区间内的Integer值可以直接使用==进行判断，但是这个区间之外的所有数据，都会在堆上产生，并不会复用已有对象，这是一个大坑，推荐使用equals方法进行判断。
 8.关于基本数据类型与包装数据类型的使用标准如下：
@@ -63,15 +61,18 @@ StringBuffer sb = new StringBuffer();
 说明：在方法执行抛出异常时，可以直接调用POJO的toString()方法打印其属性值，便于排查问题。
 13.【推荐】使用索引访问用String的split方法得到的数组时，需做最后一个分隔符后有无内容的检查，否则会有抛IndexOutOfBoundsException的风险。
 说明：
+```java
 String str = "a,b,c,,"; 
 String[] ary = str.split(","); 
 // 预期大于3，结果是3
 System.out.println(ary.length); 
+```
 14.【推荐】当一个类有多个构造方法，或者多个同名方法，这些方法应该按顺序放置在一起，便于阅读，此条规则优先于第15条规则。
 15.【推荐】 类内方法定义的顺序依次是：公有方法或保护方法 > 私有方法 > getter/setter方法。
 说明：公有方法是类的调用者和维护者最关心的方法，首屏展示最好；保护方法虽然只是子类关心，也可能是“模板设计模式”下的核心方法；而私有方法外部一般不需要特别关心，是一个黑盒实现；因为承载的信息价值较低，所有Service和DAO的getter/setter方法放在类体最后。
 16.【推荐】setter方法中，参数名称与类成员变量名称一致，this.成员名 = 参数名。在getter/setter方法中，不要增加业务逻辑，增加排查问题的难度。
 反例：
+```java
 public Integer getData() {     
 if (condition) { 
 return this.data + 100; 
@@ -79,13 +80,16 @@ return this.data + 100;
 return this.data - 100;
 } 
 } 
+```
 17.【推荐】循环体内，字符串的连接方式，使用StringBuilder的append方法进行扩展。
 说明：反编译出的字节码文件显示每次循环都会new出一个StringBuilder对象，然后进行append操作，最后通过toString方法返回String对象，造成内存资源浪费。
 反例：
+```java
 String str = "start";     
 for (int i = 0; i < 100; i++) {         
 str = str + "hello";     
 } 
+```
 18.【推荐】final可以声明类、成员变量、方法、以及本地变量，下列情况使用final关键字：
  1） 不允许被继承的类，如：String类。
  2） 不允许修改引用的域对象，如：POJO类的域变量。
@@ -117,22 +121,27 @@ str = str + "hello";
 4.【强制】使用集合转数组的方法，必须使用集合的toArray(T[] array)，传入的是类型完全一样的数组，大小就是list.size()。
 说明：使用toArray带参方法，入参分配的数组空间不够大时，toArray方法内部将重新分配内存空间，并返回新数组地址；如果数组元素个数大于实际所需，下标为[ list.size() ]的数组元素将被置为null，其它数组元素保持原值，因此最好将方法入参数组大小定义与集合元素个数一致。
 正例：
+```java
 List<String> list = new ArrayList<String>(2);     
 list.add("guan");     
 list.add("bao");      
 String[] array = new String[list.size()];     
 array = list.toArray(array); 
+```
 反例：直接使用toArray无参方法存在问题，此方法返回值只能是Object[]类，若强转其它类型数组将出现ClassCastException错误。
 5.【强制】使用工具类Arrays.asList()把数组转换成集合时，不能使用其修改集合相关的方法，它的add/remove/clear方法会抛出UnsupportedOperationException异常。
 说明：asList的返回对象是一个Arrays内部类，并没有实现集合的修改方法。Arrays.asList体现的是适配器模式，只是转换接口，后台的数据仍是数组。
+```java
     String[] str = new String[] { "you", "wu" };
     List list = Arrays.asList(str);
+```
 第一种情况：list.add("yangguanbao"); 运行时异常。
 第二种情况：str[0] = "gujin"; 那么list.get(0)也会随之修改。
 6.【强制】泛型通配符<? extends T>来接收返回的数据，此写法的泛型集合不能使用add方法，而<? super T>不能使用get方法，作为接口调用赋值时易出错。
 说明：扩展说一下PECS(Producer Extends Consumer Super)原则：第一、频繁往外读取内容的，适合用<? extends T>。第二、经常往里插入的，适合用<? super T>。
 7.【强制】不要在foreach循环里进行元素的remove/add操作。remove元素请使用Iterator方式，如果并发操作，需要对Iterator对象加锁。
 正例：
+```java
 Iterator<String> iterator = list.iterator(); 
 while (iterator.hasNext()) {             
 String item = iterator.next();                      
@@ -149,6 +158,7 @@ if ("1".equals(item)) {
 list.remove(item);         
 }     
 } 
+```
 说明：以上代码的执行结果肯定会出乎大家的意料，那么试一下把“1”换成“2”，会是同样的结果吗？
 8.【强制】 在JDK7版本及以上，Comparator要满足如下三个条件，不然Arrays.sort，Collections.sort会报IllegalArgumentException异常。
 说明：三个条件如下
@@ -156,12 +166,14 @@ list.remove(item);
  2） x>y，y>z，则x>z。
  3） x=y，则x，z比较结果和y，z比较结果相同。
 反例：下例中没有处理相等的情况，实际使用中可能会出现异常：
+```
 new Comparator<Student>() {          
 @Override         
 public int compare(Student o1, Student o2) {             
 return o1.getId() > o2.getId() ? 1 : -1;         
 }     
 }; 
+```
 9.【推荐】集合初始化时，指定集合初始值大小。
 说明：HashMap使用HashMap(int initialCapacity) 初始化，
 正例：initialCapacity = (需要存储的元素个数 / 负载因子) + 1。注意负载因子（即loader factor）默认为0.75，如果暂时无法确定初始值大小，请设置为16（即默认值）。
@@ -185,11 +197,13 @@ HashMap	允许为null	允许为null	AbstractMap	线程不安全
 说明：资源驱动类、工具类、单例工厂类都需要注意。
 2.【强制】创建线程或线程池时请指定有意义的线程名称，方便出错时回溯。
 正例：
+```java
 public class TimerTaskThread extends Thread {     
 public TimerTaskThread() {         
 super.setName("TimerTaskThread");  
 ... 
 } 
+```
 3.【强制】线程资源必须通过线程池提供，不允许在应用中自行显式创建线程。
 说明：使用线程池的好处是减少在创建和销毁线程上所花的时间以及系统资源的开销，解决资源不足的问题。如果不使用线程池，有可能造成系统创建大量同类线程而导致消耗完内存或者“过度切换”的问题。
 4.【强制】线程池不允许使用Executors去创建，而是通过ThreadPoolExecutor的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险。
@@ -200,12 +214,14 @@ super.setName("TimerTaskThread");
   允许的创建线程数量为Integer.MAX_VALUE，可能会创建大量的线程，从而导致OOM。
 5.【强制】SimpleDateFormat 是线程不安全的类，一般不要定义为static变量，如果定义为static，必须加锁，或者使用DateUtils工具类。
 正例：注意线程安全，使用DateUtils。亦推荐如下处理：
+```java
 private static final ThreadLocal<DateFormat> df = new ThreadLocal<DateFormat>() {      
  @Override       
 protected DateFormat initialValue() {           
 return new SimpleDateFormat("yyyy-MM-dd");       
 }   
 };   
+```
 说明：如果是JDK8的应用，可以使用Instant代替Date，LocalDateTime代替Calendar，DateTimeFormatter代替SimpleDateFormat，官方给出的解释：simple beautiful strong immutable thread-safe。
 6.【强制】高并发时，同步调用应该去考量锁的性能损耗。能用无锁数据结构，就不要用锁；能锁区块，就不要锁整个方法体；能用对象锁，就不要用类锁。
 说明：尽可能使加锁的代码块工作量尽可能的小，避免在锁代码块中调用RPC方法。
@@ -221,6 +237,7 @@ return new SimpleDateFormat("yyyy-MM-dd");
 正例：在JDK7之后，可以直接使用API ThreadLocalRandom，而在 JDK7之前，需要编码保证每个线程持有一个实例。
 12.【推荐】在并发场景下，通过双重检查锁（double-checked locking）实现延迟初始化的优化问题隐患(可参考 The "Double-Checked Locking is Broken" Declaration)，推荐解决方案中较为简单一种（适用于JDK5及以上版本），将目标属性声明为 volatile型。
 反例：
+```java
 class Singleton {  
 private Helper helper = null; 
 public Helper getHelper() { 
@@ -232,6 +249,7 @@ return helper;
 } 
 // other methods and fields... 
 } 
+```
 13.【参考】volatile解决多线程内存不可见问题。对于一写多读，是可以解决变量同步问题，但是如果多写，同样无法解决线程安全问题。如果是count++操作，使用如下类实现：AtomicInteger count = new AtomicInteger(); count.addAndGet(1); 如果是JDK8，推荐使用LongAdder对象，比AtomicLong性能更好（减少乐观锁的重试次数）。
 14.【参考】 HashMap在容量不够进行resize时由于高并发可能出现死链，导致CPU飙升，在开发过程中可以使用其它数据结构或加锁来规避此风险。
 15.【参考】ThreadLocal无法解决共享对象的更新问题，ThreadLocal对象建议使用static修饰。这个变量是针对一个线程内所有操作共享的，所以设置为静态变量，所有此类实例共享此静态变量 ，也就是说在类第一次被使用时装载，只分配一块存储空间，所有此类的对象(只要是这个线程内定义的)都可以操控这个变量。
@@ -243,6 +261,7 @@ return helper;
 说明：如果并发控制没有处理好，容易产生等值判断被“击穿”的情况，使用大于或小于的区间判断条件来代替。
 反例：判断剩余奖品数量等于0时，终止发放奖品，但因为并发处理错误导致奖品数量瞬间变成了负数，这样的话，活动无法终止。
 4.【推荐】表达异常的分支时，少用if-else方式，这种方式可以改写成：
+```java
 if (condition) {    
           ...   
           return obj;   
@@ -264,10 +283,12 @@ public void today() {
 System.out.println(“stay at home to learn Alibaba Java Coding Guidelines.”);
      return;
 }
+```
 5.【推荐】除常用方法（如getXxx/isXxx）等外，不要在条件判断中执行其它复杂的语句，将复杂逻辑判断的结果赋值给一个有意义的布尔变量名，以提高可读性。
 说明：很多if语句内的逻辑相当复杂，阅读者需要分析条件表达式的最终结果，才能明确什么样的条件执行什么样的语句，那么，如果阅读者分析逻辑表达式错误呢？
 正例：
 // 伪代码如下
+```java
 final boolean existed = (file.open(fileName, "w") != null) && (...) || (...);
 if (existed) {
     ...
@@ -276,6 +297,7 @@ if (existed) {
 if ((file.open(fileName, "w") != null) && (...) || (...)) {
     ...
 }
+```
 6.【推荐】循环体中的语句要考量性能，以下操作尽量移至循环体外处理，如定义对象、变量、获取数据库连接，进行不必要的try-catch操作（这个try-catch是否可以移至循环体外）。
 7.【推荐】避免采用取反逻辑运算符。
 说明：取反逻辑不利于快速理解，并且取反逻辑写法必然存在对应的正向逻辑写法。
@@ -323,8 +345,10 @@ put(elephant, fridge);
 (一)异常处理
 1.【强制】Java 类库中定义的可以通过预检查方式规避的RuntimeException异常不应该通过catch 的方式来处理，比如：NullPointerException，IndexOutOfBoundsException等等。
 说明：无法通过预检查的异常除外，比如，在解析字符串形式的数字时，不得不通过catch NumberFormatException来实现。
+```java
 正例：if (obj != null) {...}
 反例：try { obj.method() } catch (NullPointerException e) {…}
+```
 2.【强制】异常不要用来做流程控制，条件控制。
 说明：异常设计的初衷是解决程序运行中的各种意外情况，且异常的处理效率比条件判断方式要低很多。
 3.【强制】catch时请分清稳定代码和非稳定代码，稳定代码指的是无论如何不会出错的代码。对于非稳定代码的catch尽可能进行区分异常类型，再做对应的异常处理。
@@ -361,9 +385,11 @@ private boolean checkParam(DTO dto) {...}
 
 (二)日志规约
 1.【强制】应用中不可直接使用日志系统（Log4j、Logback）中的API，而应依赖使用日志框架SLF4J中的API，使用门面模式的日志框架，有利于维护和各个类的日志处理方式统一。
+```java
 import org.slf4j.Logger; 
 import org.slf4j.LoggerFactory;
  private static final Logger logger = LoggerFactory.getLogger(Abc.class); 
+ ```
 2.【强制】日志文件推荐至少保存15天，因为有些异常具备以“周”为频次发生的特点。
 3.【强制】应用中的扩展日志（如打点、临时监控、访问日志等）命名方式：appName_logType_logName.log。logType:日志类型，推荐分类有stats/monitor/visit等；logName:日志描述。这种命名的好处：通过文件名就可知道日志文件属于什么应用，什么类型，什么目的，也有利于归类查找。
 正例：mppserver应用中单独监控时区转换异常，如：                                 mppserver_monitor_timeZoneConvert.log
@@ -371,11 +397,13 @@ import org.slf4j.LoggerFactory;
 4.【强制】对trace/debug/info级别的日志输出，必须使用条件输出形式或者使用占位符的方式。
 说明：logger.debug("Processing trade with id: " + id + " and symbol: " + symbol); 如果日志级别是warn，上述日志不会打印，但是会执行字符串拼接操作，如果symbol是对象，会执行toString()方法，浪费了系统资源，执行了上述操作，最终日志却没有打印。
 正例：（条件）
+```java
 if (logger.isDebugEnabled()) {   
 logger.debug("Processing trade with id: " + id + " and symbol: " + symbol);  
 }      
 正例：（占位符）
 logger.debug("Processing trade with id: {} and symbol : {} ", id, symbol); 
+```
 5.【强制】避免重复打印日志，浪费磁盘空间，务必在log4j.xml中设置additivity=false。
 正例：<logger name="com.taobao.dubbo.config" additivity="false"> 
 6.【强制】异常信息应该包括两类信息：案发现场信息和异常堆栈信息。如果不处理，那么通过关键字throws往上抛出。
@@ -580,9 +608,11 @@ logger.debug("Processing trade with id: {} and symbol : {} ", id, symbol);
 4.【强制】sql.xml配置参数使用：#{}，#param# 不要使用${} 此种方式容易出现SQL注入。
 5.【强制】iBATIS自带的queryForList(String statementName,int start,int size)不推荐使用。
 说明：其实现方式是在数据库取到statementName对应的SQL语句的所有记录，再通过subList取start,size的子集合。
+```java
 正例：Map<String, Object> map = new HashMap<String, Object>();   
 map.put("start", start);   
 map.put("size", size);   
+```
 6.【强制】不允许直接拿HashMap与Hashtable作为查询结果集的输出。
 说明：resultClass=”Hashtable”，会置入字段名和属性值，但是值的类型不可控。
 7.【强制】更新数据表记录时，必须同时更新记录对应的gmt_modified字段值为当前时间。
@@ -645,7 +675,9 @@ map.put("size", size);
 1.【推荐】高并发服务器建议调小TCP协议的time_wait超时时间。
 说明：操作系统默认240秒后，才会关闭处于time_wait状态的连接，在高并发访问下，服务器端会因为处于time_wait的连接数太多，可能无法建立新的连接，所以需要在服务器上调小此等待值。
 正例：在linux服务器上请通过变更/etc/sysctl.conf文件去修改该缺省值（秒）：
-     net.ipv4.tcp_fin_timeout = 30
+     ```java
+     net.ipv4.tcp_fin_timeout = 30
+     ```
 2.【推荐】调大服务器所支持的最大文件句柄数（File Descriptor，简写为fd）。
 说明：主流操作系统的设计是将TCP/UDP连接采用与文件一样的方式去管理，即一个连接对应于一个fd。主流的linux服务器默认所支持最大fd数量为1024，当并发连接数很大时很容易因为fd不足而出现“open too many files”错误，导致新的连接无法建立。 建议将linux服务器所支持的最大句柄数调高数倍（与服务器的内存数量相关）。
 3.【推荐】给JVM设置-XX:+HeapDumpOnOutOfMemoryError参数，让JVM碰到OOM场景时输出dump信息。

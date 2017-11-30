@@ -1,22 +1,14 @@
 
-
 ```java
-String ygb = new String();
-```
-7.【强制】单行字符数限制不超过120个，超出需要换行，换行时遵循如下原则：
- 1） 第二行相对第一行缩进4个空格，从第三行开始，不再继续缩进，参考示例。
- 2） 运算符与下文一起换行。
- 3） 方法调用的点符号与下文一起换行。
- 4） 方法调用时，多个参数，需要换行时，在逗号后进行。
- 5） 在括号前不要换行，见反例。
-正例：
 StringBuffer sb = new StringBuffer(); 
 // 超过120个字符的情况下，换行缩进4个空格，点号和方法名称一起换行 
 sb.append("zi").append("xin")...   
 .append("huang")... 
 .append("huang")... 
 .append("huang"); 
+```
 反例：
+```java
 StringBuffer sb = new StringBuffer(); 
 // 超过120个字符的情况下，不要在括号前换行 
 sb.append("zi").append("xin")...append     
@@ -25,6 +17,7 @@ sb.append("zi").append("xin")...append
 // 参数很多的方法调用可能超过120个字符，不要在逗号前换行
  method(args1, args2, args3, ...     
 , argsX); 
+```
 8.【强制】方法参数在定义和传入时，多个参数逗号后边必须加空格。
 正例：下例中实参的"a",后边必须要有一个空格。
 method("a", "b", "c"); 

@@ -1,5 +1,5 @@
 
 ```java
-String args[]
-int[] arrayDerno；
+String key = "Id#taobao_" + tradeId; 
+cache.put(key, value); 
 ```

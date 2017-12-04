@@ -1,5 +1,4 @@
 
 ```java
-int[] arrayDerno；
-
+public abstract void f()
 ```

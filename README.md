@@ -1,4 +1,6 @@
 
 ```java
-public abstract void f()
+public class OrderFactory; 
+public class LoginProxy; 
+public class ResourceObserver; 
 ```

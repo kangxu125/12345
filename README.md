@@ -1,5 +1,5 @@
 
 ```java
-void f() 
-String COMPANY = "alibaba"
+public class OrderFactory; 
+public class LoginProxy;
 ```
